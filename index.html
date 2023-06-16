@@ -1,8 +1,84 @@
 <html>
     <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <script>
+            $(document).ready(function(){
+                var i = 0
+                var now = new Date();
+                // var lake_trip_start = new Date(2023, 5, 21, 14, 0, 0, 0);
+                var central_hours_to_utc_hours = 16 + 5; //add 5 hours to cental time to get UTC start time
+                var lake_trip_start = new Date(Date.UTC(2023, 5, 21, central_hours_to_utc_hours, 0, 0));
 
+                miliseconds_per_day = (24 * 60 * 60 * 1000);
+                miliseconds_per_hour = miliseconds_per_day / 24;
+                miliseconds_per_minute = miliseconds_per_hour / 60;
+                miliseconds_per_sec = 1000;
+                //setInteval called every second.
+                setInterval(function(){
+                    now = new Date(); //update current time
+                    mili_diff = lake_trip_start.getTime() - now.getTime(); // difference in milliseconds between the two dates 
+                    $("#lake_start_date").text("Lake Trip Start: " + lake_trip_start);
+                    $("#current_date").text("Current Time: " + now);
+                    i += 1;
+                    if(mili_diff > 0){
+                        miliseconds_per_day = (24 * 60 * 60 * 1000);
+                        days = Math.trunc(mili_diff / miliseconds_per_day);
+                        console.log("days = " + days);
+
+                        miliseconds_per_hour = miliseconds_per_day / 24;
+                        hours = Math.trunc((mili_diff % miliseconds_per_day) / miliseconds_per_hour);
+                        console.log("hours = " + hours);
+
+                        miliseconds_per_minute = miliseconds_per_hour / 60;
+                        minutes = Math.trunc((mili_diff % miliseconds_per_hour) / miliseconds_per_minute );
+                        console.log("minute = " + minutes);
+
+                        miliseconds_per_sec = 1000;
+                        seconds = Math.trunc((mili_diff % miliseconds_per_minute) / miliseconds_per_sec);
+                        console.log("seconds = " + seconds);
+
+                        $("#days").text(days + " days")
+                        $("#hours").text(hours + " hours")
+                        $("#minutes").text(minutes + " minutes")
+                        $("#seconds").text(seconds + " seconds")
+                    }
+                    else{
+                        $("#message").text("Event has already started!");
+                    }
+
+                }, 1000);
+            });
+        </script>
+        <style>
+            #message{
+                color: red;
+                font-size: 30;
+                margin-bottom: 10px;
+            }
+            .time_unit{
+                display: inline-block;
+                margin-right: 5px;
+                font-size: 40px;
+            }
+            img{
+                max-width: 100%;
+            }
+        </style>
     </head>
     <body>
-        <p>Hello World!</p>
+        <div id="message">THE FUN BEGINS IN: </div>
+        <div>
+            <div class="time_unit" id="days"></div>
+            <div class="time_unit" id="hours"></div>
+            <div class="time_unit" id="minutes"></div>
+            <div class="time_unit" id="seconds"></div>
+        </div>
+
+        <div id="photos">
+            <img src="friends.jpg"/>
+        </div>
+    
+        <!-- <div id="lake_start_date"></div>
+        <div id="current_date"></div> -->
     </body>
 </html>
